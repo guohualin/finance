@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.finance.mapper.NplmLoanContractMapper">
+    <!--结果集映射-->
+    <resultMap id="NplmLoanContractList" type="com.atguigu.finance.bean.NplmLoanContract" autoMapping="true">
+        <!--id:表示主键 column:表示数据库的字段名 property：实体类的属性名-->
+        <id column="id" property="id"></id>
+        <!--实体类中有个attrValueList如何表示 1对多，多对多，1对1，多对1-->
+        <association property="nplmBorrowerInfo" javaType="com.atguigu.finance.bean.NplmBorrowerInfo" autoMapping="true">
+        </association>
+        <association property="nplmContractAttribute" javaType="com.atguigu.finance.bean.NplmContractAttribute" autoMapping="true">
+        </association>
+        <association property="nplmOverdueContract" javaType="com.atguigu.finance.bean.NplmOverdueContract" autoMapping="true">
+        </association>
+        <association property="nplmRepaymentDetail" javaType="com.atguigu.finance.bean.NplmRepaymentDetail" autoMapping="true">
+        </association>
+        <association property="nplmRepaymentPlan" javaType="com.atguigu.finance.bean.NplmRepaymentPlan" autoMapping="true">
+        </association>
+        <association property="nplmRepaymentRecord" javaType="com.atguigu.finance.bean.NplmRepaymentRecord" autoMapping="true">
+        </association>
+    </resultMap>
+
+
+    <select id="selectNplmLoanContractList" resultMap="NplmLoanContractList">
+         SELECT a.*,b.*,c.*
+                FROM nplm_loan_contract a,
+                    nplm_contract_attribute b,
+                    nplm_borrower_info c
+                WHERE a.`borrower_id`=c.`id` AND
+                    a.`LOAN_CONTRACT_NUM`=b.`LOAN_CONTRACT_NUM`
+    </select>
+
+    <select id="selectNplmLoanContractOne" resultMap="NplmLoanContractList">
+          SELECT a.*,b.*,c.*,e.*,f.*,g.*,h.*
+                FROM nplm_loan_contract a,
+                    nplm_contract_attribute b,
+                    nplm_borrower_info c,
+                    nplm_overdue_contract e,
+                    nplm_repayment_detail f,
+                    nplm_repayment_plan g,
+                    nplm_repayment_record h
+                WHERE a.`borrower_id`=c.`id` AND
+                    a.`LOAN_CONTRACT_NUM`=b.`LOAN_CONTRACT_NUM`
+                    AND a.`LOAN_CONTRACT_NUM`=e.`LOAN_CONTRACT_NUM`
+                    AND a.`LOAN_CONTRACT_NUM`=f.`LOAN_CONTRACT_NUM`
+                    AND a.`LOAN_CONTRACT_NUM`=g.`LOAN_CONTRACT_NUM`
+                    AND a.`LOAN_CONTRACT_NUM`=h.`LOAN_CONTRACT_NUM`
+                    AND a.`LOAN_CONTRACT_NUM`=#{loanContractNum}
+    </select>
+
+    <!--NplmLoanContract selectNplmLoanContractOne();-->
+
+
+</mapper>
